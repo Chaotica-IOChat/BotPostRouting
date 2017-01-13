@@ -13,6 +13,7 @@
 
         internal FauxConversationController Convo;
         internal PointInConversation currentConvoPoint;
+
         internal bool convoStarted = false;
         internal bool InConvoMode = false;
 
@@ -57,7 +58,7 @@
                 foreach (ConversationRoute route in currentConvoPoint.Routes)
                 {
                     //Perform route
-                    route.Route(message.Text.ToLower(), ConversationRouteType.SEARCH_MATCH, true, async () =>
+                    Router.Route(route, message.Text.ToLower(), ConversationRouteType.SEARCH_MATCH, true, async () =>
                     {
                         //Routed = true
                         isRouted = true;
