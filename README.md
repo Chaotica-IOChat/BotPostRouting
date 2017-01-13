@@ -1,7 +1,11 @@
+[![Twitter](https://raw.githubusercontent.com/Chaotica-IOChat/BotPostRouting/master/BotPostRouting/twitter-bird.png)](https://twitter.com/ChaoticaDev)
+
 # BotPostRouting
 Simple routing for Microsoft Bot Framework, Conversation routing.
 
 BotPostRouting implements a routing-like REST API equivalent to `$_GET['value']` in php.
+
+We strongly recommend reading documentation on the [wiki-page](https://github.com/Chaotica-IOChat/BotPostRouting/wiki)! :)
 
 ---
 
