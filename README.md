@@ -15,7 +15,7 @@ BotPostRouting implements a routing-like REST API equivalent to `$_GET['value']`
 
 ## ConversationRoute
 
-`ConversationRoute` is a class which handles possible routes at `PointInConversation`.
+`ConversationRoute` is an HTTP_POST router. ie: "/home"
 
 
 ---
