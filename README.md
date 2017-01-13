@@ -22,6 +22,8 @@ BotPostRouting implements a routing-like REST API equivalent to `$_GET['value']`
 
 ## Routing
 
+![Screenshot](https://raw.githubusercontent.com/Chaotica-IOChat/BotPostRouting/master/BotPostRouting/bot-route.gif)
+
     public async void Route(String _GET, ConversationRouteType routeType, bool wildcard_allowed = true, Func<Task<bool>> func = null)
 
     route.Route("/home", ConversationRouteType.EXACT_MATCH, true, async () =>
