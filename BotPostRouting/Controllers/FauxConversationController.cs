@@ -62,7 +62,7 @@ namespace BotPostRouting
                     }
                     else
                     {
-                        if (_GET.ToLower().Contains(_GETValue.ToLower()) || wildcard_allowed == true && PIC.TargetText == "*")
+                        if (/*_GET.ToLower().Contains(_GETValue.ToLower())*/ FauxConversationController.StringUtils.STR_SearchMatch(_GET.ToLower(), _GETValue.ToLower()) || wildcard_allowed == true && PIC.TargetText == "*")
                         {
                             if (func != null)
                                 await func();
@@ -81,7 +81,7 @@ namespace BotPostRouting
                     }
                     else
                     {
-                        if (_GET.ToLower().Contains(_GETValue.ToLower()) || wildcard_allowed == true && PIC.TargetText == "*")
+                        if (/*_GET.ToLower().Contains(_GETValue.ToLower())*/ FauxConversationController.StringUtils.STR_SearchMatch(_GET.ToLower(), _GETValue.ToLower()) || wildcard_allowed == true && PIC.TargetText == "*")
                         {
                             if (func != null)
                                 await func();
@@ -150,20 +150,51 @@ namespace BotPostRouting
     [Serializable()]
     public class FauxConversationController 
     {
+
+        public static class StringUtils
+        {
+            public static bool STR_SearchMatch(String string1, String string2)
+            {
+                bool match = false;
+
+                String[] splits = string2.Split(new string[] { "%s" }, StringSplitOptions.None);
+
+                String tmpString = string1;
+                foreach(String s in splits)
+                {
+                    int x = tmpString.IndexOf(s);
+
+                    if(x>= 0)
+                    {
+                        tmpString = tmpString.Substring(x+s.Length, tmpString.Length-(x + s.Length));
+                        match = true;
+                    }else
+                    {
+                        match = false;
+                       break;
+                    }
+                }
+
+                return match;
+            }
+        }
+
         public ObservableCollection<PointInConversation> ConversationPoints = new ObservableCollection<PointInConversation>();
         
         public FauxConversationController()
         {
-            
+            // - - - - - Conversation points - - - - - \\
             PointInConversation ConvoEntryHello_PIC = new PointInConversation(1, "Hi;Hello", "Hey!");
-
-            PointInConversation ConvoEntryAgeRequest_PIC = new PointInConversation(2, "how old", "I am 24 years old. How old are you?");
-
+            PointInConversation ConvoEntrySentiment_PIC = new PointInConversation(1, "how %s you %s feel;how are you", "I'm doing fine! Thanks for asking! :D");
+            PointInConversation ConvoEntryAgeRequest_PIC = new PointInConversation(2, "how old;what %s your %s age", "I am 24 years old. How old are you?");
             PointInConversation ConvoEntryAgeReceived_PIC = new PointInConversation(3, "*", "Thanks for sharing!");
 
 
             // - - - - - Route1: Said Hi or Hello to the bot - - - - - \\
             ConversationRoute ConvoEntryHelloRoute = new ConversationRoute(ConvoEntryHello_PIC, ConversationRouteType.EXACT_MATCH);
+
+            // - - - - - Route1: Asked the bot about it's state of sentiment - - - - - \\
+            ConversationRoute ConvoEntrySentimentRoute = new ConversationRoute(ConvoEntrySentiment_PIC, ConversationRouteType.SEARCH_MATCH);
 
             // - - - - - Route2: Requested to know bot's age - - - - - \\
             ConversationRoute ConvoEntryAgeRequestRoute = new ConversationRoute(ConvoEntryAgeRequest_PIC, ConversationRouteType.SEARCH_MATCH);
@@ -172,17 +203,17 @@ namespace BotPostRouting
             ConversationRoute ConvoEntryAgeReceivedRoute = new ConversationRoute(ConvoEntryAgeReceived_PIC, ConversationRouteType.SEARCH_MATCH);
 
             // - - - - - Bind conversation routes - - - - - \\
-            ConversationRoute[] routes = { ConvoEntryHelloRoute, ConvoEntryAgeRequestRoute };
+            ConversationRoute[] routes = { ConvoEntryHelloRoute, ConvoEntryAgeRequestRoute, ConvoEntrySentimentRoute };
             ConvoEntryHello_PIC.BindRoutes(routes);
-
+            ConvoEntrySentiment_PIC.BindRoutes(routes);
             ConvoEntryAgeRequest_PIC.BindRoute(ConvoEntryAgeReceivedRoute);
-            
             ConvoEntryAgeReceived_PIC.BindRoutes(routes);
 
             // - - - - - Add conversation points - - - - - \\
             ConversationPoints.Add(ConvoEntryHello_PIC);
             ConversationPoints.Add(ConvoEntryAgeRequest_PIC);
             ConversationPoints.Add(ConvoEntryAgeReceived_PIC);
+            ConversationPoints.Add(ConvoEntrySentiment_PIC);
         }
     }
 }
